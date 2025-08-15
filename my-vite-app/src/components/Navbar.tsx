@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../store";
-import { logout } from "../auth/loginSlice"; // adjust path if needed
+import { logout } from "../auth/loginSlice";
 
 const Nav = styled.nav`
   position: fixed;
@@ -14,6 +14,7 @@ const Nav = styled.nav`
   padding: 1rem;
   display: flex;
   gap: 1rem;
+  align-items: center;
   z-index: 1000;
 `;
 
@@ -27,6 +28,25 @@ const StyledLink = styled(Link)<{ $active?: boolean }>`
   }
 `;
 
+const UserName = styled.span`
+  margin-left: auto; /* push username and logout to the right */
+  color: #f1f5f9;
+  font-weight: bold;
+`;
+
+const LogoutButton = styled.button`
+  background: transparent;
+  border: none;
+  color: #f1f5f9;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 1rem;
+
+  &:hover {
+    color: #ef4444;
+  }
+`;
+
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -36,7 +56,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/login"); // redirect to login page
+    navigate("/login");
   };
 
   return (
@@ -46,15 +66,14 @@ export default function Navbar() {
       </StyledLink>
 
       {!user && (
-        <StyledLink to="/login" $active={location.pathname === "/login"}>
-          Login
-        </StyledLink>
-      )}
-
-      {!user && (
-        <StyledLink to="/register" $active={location.pathname === "/register"}>
-          Register
-        </StyledLink>
+        <>
+          <StyledLink to="/login" $active={location.pathname === "/login"}>
+            Login
+          </StyledLink>
+          <StyledLink to="/register" $active={location.pathname === "/register"}>
+            Register
+          </StyledLink>
+        </>
       )}
 
       {user && (
@@ -65,18 +84,11 @@ export default function Navbar() {
           <StyledLink to="/courses" $active={location.pathname === "/courses"}>
             Courses
           </StyledLink>
-          <button
-            onClick={handleLogout}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "#f1f5f9",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            Logout
-          </button>
+
+          {/* show username */}
+          <UserName>{user.username}</UserName>
+
+          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
         </>
       )}
     </Nav>
