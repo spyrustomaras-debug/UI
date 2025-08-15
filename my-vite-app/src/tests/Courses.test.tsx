@@ -1,11 +1,13 @@
 // src/tests/Courses.test.tsx
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Courses from "../pages/Courses";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import * as coursesSlice from "../store/coursesSlice";
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { renderWithProviders } from "./utils";
+
 
 // Do NOT pass thunk middleware — just use empty array
 const mockStore = configureStore([]);
@@ -66,11 +68,20 @@ describe("Courses Page", () => {
       <Provider store={store}>
         <Courses />
       </Provider>
-      
+
     );
   
     // Assert that the error message is displayed
     expect(screen.getByText(/Error: Network Error/i)).toBeInTheDocument();
   });
+
+  test("opens modal when Add Course button is clicked", () => {
+    render(<Courses />, { wrapper: renderWithProviders(<Courses />).wrapper });
+  
+    fireEvent.click(screen.getByText(/Add Course/i));
+    expect(screen.getByText(/Create New Course/i)).toBeInTheDocument();
+    screen.debug()
+  });
+  
   
 });
