@@ -35,19 +35,24 @@ const Button = styled.button`
   }
 `;
 
+// Replace CourseList styled component
 const CourseList = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;      /* Allow wrapping to new lines */
+  gap: 1rem;
   list-style: none;
   padding: 0;
 `;
 
+
+// Optional: hide scrollbar for a cleaner look
 const CourseCard = styled.li`
+  flex: 0 0 250px;  /* Fixed width for each card */
   background-color: #f1f5f9;
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  scroll-snap-align: start;
 `;
 
 const CardHeader = styled.div`
