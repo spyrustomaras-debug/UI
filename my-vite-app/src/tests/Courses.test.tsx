@@ -66,6 +66,7 @@ describe("Courses Page", () => {
       <Provider store={store}>
         <Courses />
       </Provider>
+      
     );
   
     // Assert that the error message is displayed
