@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import coursesReducer from "./store/coursesSlice";
 import authReducer from "./auth/authSlice";
 import loginReducer from "./auth/loginSlice";
+import searchReducer from "./auth/searchSlice";
 
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     courses: coursesReducer,
     auth: authReducer,
     login: loginReducer,
+    search: searchReducer,
   },
 });
 
