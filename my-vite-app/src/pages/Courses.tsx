@@ -1,6 +1,6 @@
 // src/pages/Courses.tsx
 import React, { useEffect, useState } from "react";
-import { fetchCourses } from "../store/coursesSlice";
+import { fetchCourses, createCourse } from "../store/coursesSlice";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import styled from "styled-components";
 
@@ -29,36 +29,54 @@ const Button = styled.button`
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-
   &:hover {
     background-color: #2563eb;
   }
 `;
 
-// Replace CourseList styled component
+// Modal styles
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  min-width: 300px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid #cbd5e1;
+`;
+
+// Courses list
 const CourseList = styled.ul`
   display: flex;
-  flex-wrap: wrap;      /* Allow wrapping to new lines */
+  flex-wrap: wrap;
   gap: 1rem;
   list-style: none;
   padding: 0;
 `;
 
-
-// Optional: hide scrollbar for a cleaner look
 const CourseCard = styled.li`
-  flex: 0 0 250px;  /* Fixed width for each card */
+  flex: 0 0 250px;
   background-color: #f1f5f9;
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  scroll-snap-align: start;
-`;
-
-const CardHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 const CardTitle = styled.h3`
@@ -71,54 +89,31 @@ const CardDescription = styled.p`
   margin-top: 0.5rem;
 `;
 
-const CardActions = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-`;
-
 export default function Courses() {
   const dispatch = useAppDispatch();
-  const { items: courses, loading, error } = useAppSelector(
-    (state) => state.courses
-  );
+  const { items: courses, loading, error } = useAppSelector((state) => state.courses);
 
-  // Local state for demo (add/edit)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCourseTitle, setNewCourseTitle] = useState("");
+  const [newCourseDescription, setNewCourseDescription] = useState("");
 
   useEffect(() => {
     dispatch(fetchCourses());
   }, [dispatch]);
 
-  if (loading) return <p>Loading courses...</p>;
-  if (error) return <p>Error: {error}</p>;
-
   const handleAddCourse = () => {
-    alert(`Here you would implement adding a course: ${newCourseTitle}`);
+    if (!newCourseTitle || !newCourseDescription) return alert("Fill in all fields!");
+    dispatch(createCourse({ title: newCourseTitle, description: newCourseDescription }));
     setNewCourseTitle("");
-  };
-
-  const handleEditCourse = (id: number) => {
-    alert(`Here you would implement editing course with ID: ${id}`);
-  };
-
-  const handleDeleteCourse = (id: number) => {
-    alert(`Here you would implement deleting course with ID: ${id}`);
+    setNewCourseDescription("");
+    setIsModalOpen(false);
   };
 
   return (
     <Container>
       <Header>
         <Title>Courses</Title>
-        <div>
-          <input
-            type="text"
-            placeholder="New course title..."
-            value={newCourseTitle}
-            onChange={(e) => setNewCourseTitle(e.target.value)}
-          />
-          <Button onClick={handleAddCourse}>Add Course</Button>
-        </div>
+        <Button onClick={() => setIsModalOpen(true)}>Add Course</Button>
       </Header>
 
       {courses.length === 0 && <p>No courses available.</p>}
@@ -126,17 +121,36 @@ export default function Courses() {
       <CourseList>
         {courses.map((course) => (
           <CourseCard key={course.id}>
-            <CardHeader>
-              <CardTitle>{course.title}</CardTitle>
-            </CardHeader>
+            <CardTitle>{course.title}</CardTitle>
             <CardDescription>{course.description}</CardDescription>
-            <CardActions>
-              <Button onClick={() => handleEditCourse(course.id)}>Edit</Button>
-              <Button onClick={() => handleDeleteCourse(course.id)}>Delete</Button>
-            </CardActions>
           </CourseCard>
         ))}
       </CourseList>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <ModalOverlay onClick={() => setIsModalOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <h2>Create New Course</h2>
+            <Input
+              type="text"
+              placeholder="Title"
+              value={newCourseTitle}
+              onChange={(e) => setNewCourseTitle(e.target.value)}
+            />
+            <Input
+              type="text"
+              placeholder="Description"
+              value={newCourseDescription}
+              onChange={(e) => setNewCourseDescription(e.target.value)}
+            />
+            <Button onClick={handleAddCourse}>Create</Button>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
     </Container>
   );
 }
