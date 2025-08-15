@@ -95,25 +95,26 @@ const Register: React.FC = () => {
       <Title>Register</Title>
       <Form onSubmit={handleSubmit}>
         <div>
-          <Label>Username</Label>
-          <Input name="username" value={form.username} onChange={handleChange} required />
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" name="username" value={form.username} onChange={handleChange} required />
         </div>
         <div>
-          <Label>Email</Label>
-          <Input type="email" name="email" value={form.email} onChange={handleChange} required />
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" name="email" value={form.email} onChange={handleChange} required />
         </div>
         <div>
-          <Label>Password</Label>
-          <Input type="password" name="password" value={form.password} onChange={handleChange} required />
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" type="password" name="password" value={form.password} onChange={handleChange} required />
         </div>
         <div>
-          <Label>Confirm Password</Label>
-          <Input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} required />
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Input id="confirmPassword" type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} required />
         </div>
         <Button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
+            {loading ? "Registering..." : "Register"}
         </Button>
-      </Form>
+    </Form>
+
       {user && <Message success>Registration successful!</Message>}
       {error && <Message>{error}</Message>}
     </Container>
