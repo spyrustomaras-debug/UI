@@ -82,6 +82,5 @@ describe("Courses Page", () => {
     expect(screen.getByText(/Create New Course/i)).toBeInTheDocument();
     screen.debug()
   });
-  
-  
+
 });

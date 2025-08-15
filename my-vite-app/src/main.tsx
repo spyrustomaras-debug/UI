@@ -8,6 +8,8 @@ import Courses from "./pages/Courses";
 import "./style.css";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import Register from "./components/Register";
+import Login from "./components/Login";
 
 ReactDOM.createRoot(document.getElementById("app") as HTMLElement).render(
   <React.StrictMode>
@@ -16,6 +18,8 @@ ReactDOM.createRoot(document.getElementById("app") as HTMLElement).render(
       <Router>
         <Navbar />
         <Routes>
+          <Route path="/register" element={<Register/>}/>
+          <Route path="/login" element={<Login/>}/>
           <Route path="/" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
           <Route path="/courses" element={<Courses />} />
